@@ -40,24 +40,30 @@ const findShortestPath = (
   startNode: string,
   endNode: string,
 ) => {
+ 
   // track distances from the start node using a hash object
   let distances: Record<string, number> = {};
   distances[endNode] = Infinity;
   distances = Object.assign(distances, paths[startNode]);
 
+
+
   // track paths using a hash object
-  const parents: Record<string, string | null> = { [endNode]: null };
+  let parents: Record<string, string | null> = { [endNode]: null };
+  parents = Object.assign(parents,paths[startNode])
   for (const child in paths[startNode]) {
     parents[child] = startNode;
   }
+  
 
   // collect visited nodes
-  const visited: string[] = [];
+  const visited: string[] = [startNode];
   // find the nearest node
   let node = shortestDistanceNode(distances, visited);
-
+  
   // for that node:
   while (node) {
+    
     // find its distance from the start node & its child nodes
     const distance = distances[node];
     const children = paths[node];
@@ -70,25 +76,40 @@ const findShortestPath = (
       // or if the recorded distance is shorter than the previously stored distance from the start node to the child node
       if (!distances[child] || distances[child] > newdistance) {
         // save the distance to the object
-        distances[child] = newdistance;
-        // record the path
-        parents[child] = node;
+        if(!visited.includes(child))
+        {
+          distances[child] = newdistance;
+          // record the path
+          parents[child] = node;
+        }
+       
       }
     }
     // move the current node to the visited set
     visited.push(node);
     // move to the nearest neighbor node
     node = shortestDistanceNode(distances, visited);
+
   }
 
+  
   // using the stored paths from start node to end node
   // record the shortest path
+
   const shortestPath = [endNode];
   let parent = parents[endNode];
+ 
+
   while (parent) {
-    shortestPath.push(parent);
-    parent = parents[parent];
+    
+
+      shortestPath.push(parent);
+      parent = parents[parent];
+    
+    
+   
   }
+  
   shortestPath.reverse();
 
   //this is the shortest path
@@ -101,6 +122,7 @@ const findShortestPath = (
 };
 
 const shortestDistanceNode = (
+
   distances: Record<string, number>,
   visited: string[],
 ) => {

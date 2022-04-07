@@ -30,7 +30,7 @@ router.get(
     const coordinates = await getCoordinates(zone);
 
     const start = performance.now();
-
+    
     const isValid = isValidLandingZone(coordinates);
     const end = performance.now();
 
@@ -49,6 +49,7 @@ export const isValidLandingZone = ({ R1: arr1, R2: arr2 }: ICoordinates) => {
     for (let j = 0; j < arr1.length; j++) {
       if (arr2[i] === arr1[j]) {
         valid.push(true);
+        break;
       }
     }
   }
